@@ -22,7 +22,7 @@ const menuItemCls =
 const menuLabelCls =
   "px-3 py-1.5 text-xs font-semibold text-muted-foreground";
 
-// ── Menu helpers ──────────────────────────────────────────────────────────────
+// ── Menu panel helpers ────────────────────────────────────────────────────────
 
 function MenuLabel({ children }: { children: React.ReactNode }) {
   return <div className={menuLabelCls}>{children}</div>;
@@ -55,11 +55,20 @@ function SubMenuItem({ icon: Icon, label, children }: {
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>();
 
+  function handleMouseEnter() {
+    clearTimeout(timer.current);
+    setOpen(true);
+  }
+
+  function handleMouseLeave() {
+    timer.current = setTimeout(() => setOpen(false), 100);
+  }
+
   return (
     <div
       className="relative"
-      onMouseEnter={() => { clearTimeout(timer.current); setOpen(true); }}
-      onMouseLeave={() => { timer.current = setTimeout(() => setOpen(false), 100); }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div className={cn(menuItemCls, "justify-between")}>
         <span className="flex items-center gap-2">
@@ -90,11 +99,20 @@ function NavItem({ icon: Icon, active = false, onClick, title, menu, menuAlign =
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>();
 
+  function handleMouseEnter() {
+    clearTimeout(timer.current);
+    setOpen(true);
+  }
+
+  function handleMouseLeave() {
+    timer.current = setTimeout(() => setOpen(false), 100);
+  }
+
   return (
     <div
       className="relative"
-      onMouseEnter={() => { clearTimeout(timer.current); setOpen(true); }}
-      onMouseLeave={() => { timer.current = setTimeout(() => setOpen(false), 100); }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <button
         title={title}
@@ -123,17 +141,26 @@ function NavItem({ icon: Icon, active = false, onClick, title, menu, menuAlign =
   );
 }
 
-// ── Profile item ──────────────────────────────────────────────────────────────
+// ── Profile item with avatar trigger ─────────────────────────────────────────
 
 function ProfileItem({ menu }: { menu: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>();
 
+  function handleMouseEnter() {
+    clearTimeout(timer.current);
+    setOpen(true);
+  }
+
+  function handleMouseLeave() {
+    timer.current = setTimeout(() => setOpen(false), 100);
+  }
+
   return (
     <div
       className="relative"
-      onMouseEnter={() => { clearTimeout(timer.current); setOpen(true); }}
-      onMouseLeave={() => { timer.current = setTimeout(() => setOpen(false), 100); }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <button
         title={PROFILE.name}
@@ -143,7 +170,10 @@ function ProfileItem({ menu }: { menu: React.ReactNode }) {
       </button>
 
       {open && (
-        <div className={cn(menuCls, "bottom-0 top-auto")} style={{ width: 240 }}>
+        <div
+          className={cn(menuCls, "bottom-0 top-auto")}
+          style={{ width: 240 }}
+        >
           {menu}
         </div>
       )}
@@ -154,13 +184,15 @@ function ProfileItem({ menu }: { menu: React.ReactNode }) {
 // ── Props ─────────────────────────────────────────────────────────────────────
 
 interface SidebarProps {
+  onToggleAI: () => void;
+  aiOpen: boolean;
+  onNavigateReports?: () => void;
   activeScreen?: string;
-  onNavigate?: (screen: string) => void;
 }
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
 
-export function Sidebar({ activeScreen, onNavigate }: SidebarProps) {
+export function Sidebar({ onToggleAI, aiOpen, onNavigateReports, activeScreen }: SidebarProps) {
   return (
     <aside
       data-name="Global_Navigation"
@@ -174,10 +206,13 @@ export function Sidebar({ activeScreen, onNavigate }: SidebarProps) {
           "linear-gradient(179.9999999999999deg, rgba(0,0,0,0) 46.635%, rgba(0,0,0,0.4) 100%), linear-gradient(90deg, rgb(64,30,90) 0%, rgb(64,30,90) 100%)",
       }}
     >
-      {/* Top nav */}
+      {/* ── Top nav ── */}
       <div className="flex flex-col items-start gap-3">
+
+        {/* Home */}
         <button title="Home" className={navBtnCls}><Home size={20} /></button>
 
+        {/* Modules */}
         <NavItem icon={Blocks} title="Modules" menu={
           <>
             <MenuLabel>Recent</MenuLabel>
@@ -190,6 +225,7 @@ export function Sidebar({ activeScreen, onNavigate }: SidebarProps) {
           </>
         } />
 
+        {/* Tools */}
         <NavItem icon={Wrench} title="Tools" menu={
           <>
             <MenuLabel>Tools</MenuLabel>
@@ -200,37 +236,33 @@ export function Sidebar({ activeScreen, onNavigate }: SidebarProps) {
           </>
         } />
 
-        <NavItem
-          icon={FileBarChart2}
-          title="Reports"
-          active={activeScreen === "reports"}
-          onClick={() => onNavigate?.("reports")}
-          menu={
-            <>
-              <MenuLabel>Reporting</MenuLabel>
-              <div onClick={() => onNavigate?.("reports")}>
-                <MenuItem icon={FileBarChart2}>Reports</MenuItem>
-              </div>
-              <SubMenuItem icon={Activity} label="Activity stream">
-                <MenuItem>Configuration logs</MenuItem>
-                <MenuItem>Import logs</MenuItem>
-                <MenuItem>Record logs</MenuItem>
-                <MenuItem>Form logs</MenuItem>
-                <MenuItem>Agent logs</MenuItem>
-                <MenuItem>Offline sync logs</MenuItem>
-              </SubMenuItem>
-              <SubMenuItem icon={Upload} label="Imports">
-                <MenuItem>History</MenuItem>
-                <MenuItem>Templates</MenuItem>
-              </SubMenuItem>
-            </>
-          }
-        />
+        {/* Reports */}
+        <NavItem icon={FileBarChart2} title="Reports" active={activeScreen === "reports"} onClick={onNavigateReports} menu={
+          <>
+            <MenuLabel>Reporting</MenuLabel>
+            <div onClick={onNavigateReports}>
+              <MenuItem icon={FileBarChart2}>Reports</MenuItem>
+            </div>
+            <SubMenuItem icon={Activity} label="Activity stream">
+              <MenuItem>Configuration logs</MenuItem>
+              <MenuItem>Import logs</MenuItem>
+              <MenuItem>Record logs</MenuItem>
+              <MenuItem>Form logs</MenuItem>
+              <MenuItem>Agent logs</MenuItem>
+              <MenuItem>Offline sync logs</MenuItem>
+            </SubMenuItem>
+            <SubMenuItem icon={Upload} label="Imports">
+              <MenuItem>History</MenuItem>
+              <MenuItem>Templates</MenuItem>
+            </SubMenuItem>
+          </>
+        } />
 
-        <NavItem icon={Sparkles} title="AI" />
+        {/* AI */}
+        <NavItem icon={Sparkles} title="AI" active={aiOpen} onClick={onToggleAI} />
       </div>
 
-      {/* Bottom nav */}
+      {/* ── Bottom nav ── */}
       <div className="flex flex-col items-center gap-6 w-full">
         <div className="flex flex-col items-start gap-3">
           <button title="Settings" className={navBtnCls}><Settings size={20} /></button>
@@ -240,6 +272,7 @@ export function Sidebar({ activeScreen, onNavigate }: SidebarProps) {
           </button>
         </div>
 
+        {/* Profile */}
         <ProfileItem menu={
           <>
             <div className="px-3 py-2 flex flex-col gap-0.5">

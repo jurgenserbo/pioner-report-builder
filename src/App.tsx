@@ -1,54 +1,114 @@
-import { useState } from "react";
-import { FileBarChart2, Plus } from "lucide-react";
-import { Button } from "@marlindtako/pioneer-design-system";
-import { Sidebar } from "./components/Sidebar";
-import { TopNav } from "./components/TopNav";
-import { ReportBuilderModal } from "./components/ReportBuilderModal";
-import "./index.css";
+import { useState, useCallback } from "react";
+import { Toaster } from "sonner";
+import { Sidebar } from "@/components/Sidebar";
+import { TopNav, type Crumb } from "@/components/TopNav";
+import { UrsaAIPanel } from "@/components/UrsaAIPanel";
+import { AccountManagement } from "@/screens/AccountManagement";
+import { TemplatesGallery } from "@/screens/TemplatesGallery";
+import type { TemplateCard } from "@/screens/TemplatesGallery";
+import { TemplateDetail } from "@/screens/TemplateDetail";
+import { BuildingAccount } from "@/screens/BuildingAccount";
+import { Reports } from "@/screens/Reports";
+import {
+  AccountManagementSkeleton,
+  TemplatesGallerySkeleton,
+  TemplateDetailSkeleton,
+} from "@/screens/SkeletonScreens";
 
-function App() {
-  const [modalOpen, setModalOpen] = useState(false);
+type Screen = "account-management" | "templates-gallery" | "template-detail" | "building-account" | "reports";
+
+const LOADING_DURATION = 700;
+
+export default function App() {
+  const [screen, setScreen] = useState<Screen>("account-management");
+  const [loadingScreen, setLoadingScreen] = useState<Screen | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateCard | null>(null);
+  const [aiPanelOpen, setAiPanelOpen] = useState(false);
+  const [reportsCrumbs, setReportsCrumbs] = useState<Crumb[]>([{ label: "Reports" }]);
+
+  const navigate = useCallback((next: Screen, beforeSwitch?: () => void) => {
+    setLoadingScreen(next);
+    setTimeout(() => {
+      beforeSwitch?.();
+      setScreen(next);
+      setLoadingScreen(null);
+    }, LOADING_DURATION);
+  }, []);
+
+  const handleSelectTemplate = (template: TemplateCard) => {
+    navigate("template-detail", () => setSelectedTemplate(template));
+  };
+
+  const showNav = screen !== "building-account" && loadingScreen !== "building-account";
+
+  const navigateToReports = useCallback(() => {
+    navigate("reports");
+  }, [navigate]);
+
+  const activeScreen = loadingScreen ?? screen;
 
   return (
     <div className="flex h-screen w-screen overflow-hidden" style={{ fontFamily: "'Manrope', sans-serif" }}>
-      <Sidebar activeScreen="reports" />
+      {showNav && <Sidebar onToggleAI={() => setAiPanelOpen((v) => !v)} aiOpen={aiPanelOpen} onNavigateReports={navigateToReports} activeScreen={screen} />}
+      {showNav && <UrsaAIPanel open={aiPanelOpen} onClose={() => setAiPanelOpen(false)} />}
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <TopNav crumbs={[{ label: "Reports" }]} />
+        {showNav && (
+          <TopNav
+            crumbs={screen === "reports"
+              ? reportsCrumbs
+              : [{ label: "Account management" }]
+            }
+          />
+        )}
 
-        <main className="flex-1 overflow-auto bg-background">
-          {/* Page header */}
-          <div className="flex items-center justify-between px-6 pt-6 pb-4">
-            <div>
-              <h1 className="text-lg font-bold text-foreground leading-6">Reports</h1>
-              <p className="text-sm text-muted-foreground mt-0.5">Build and schedule custom reports across your asset data.</p>
-            </div>
-            <Button onClick={() => setModalOpen(true)} className="gap-1.5">
-              <Plus size={16} /> Create report
-            </Button>
-          </div>
+        <main className="flex-1 overflow-hidden flex flex-col">
+          {/* Skeleton loaders — shown during navigation */}
+          {loadingScreen === "account-management" && <AccountManagementSkeleton />}
+          {loadingScreen === "templates-gallery"   && <TemplatesGallerySkeleton />}
+          {loadingScreen === "template-detail"     && <TemplateDetailSkeleton />}
 
-          {/* Empty state */}
-          <div className="flex flex-col items-center justify-center gap-4 mt-24 text-center px-8">
-            <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-muted">
-              <FileBarChart2 size={26} className="text-muted-foreground" />
+          {/* Real screens — hidden while loading */}
+          {!loadingScreen && screen === "account-management" && (
+            <AccountManagement onViewTemplates={() => navigate("templates-gallery")} />
+          )}
+          {!loadingScreen && screen === "templates-gallery" && (
+            <TemplatesGallery
+              onSelectTemplate={handleSelectTemplate}
+              onBack={() => navigate("account-management")}
+            />
+          )}
+          {!loadingScreen && screen === "template-detail" && selectedTemplate && (
+            <TemplateDetail
+              template={selectedTemplate}
+              onBack={() => navigate("templates-gallery")}
+              onUseTemplate={() => navigate("building-account")}
+            />
+          )}
+          {!loadingScreen && screen === "building-account" && (
+            <BuildingAccount onComplete={() => navigate("account-management")} />
+          )}
+          {!loadingScreen && screen === "reports" && (
+            <div className="flex-1 overflow-hidden p-4 bg-[#F2F5F8]">
+              <div className="h-full rounded-xl border border-border shadow-sm overflow-hidden">
+                <Reports onCrumbsChange={setReportsCrumbs} />
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">No reports yet</p>
-              <p className="text-xs text-muted-foreground mt-1 max-w-xs">
-                Create your first report to visualize asset data with charts, tables, and scheduled email delivery.
-              </p>
-            </div>
-            <Button variant="outline" size="sm" onClick={() => setModalOpen(true)} className="gap-1.5 mt-1">
-              <Plus size={14} /> Create report
-            </Button>
-          </div>
+          )}
         </main>
       </div>
-
-      <ReportBuilderModal open={modalOpen} onOpenChange={setModalOpen} />
+      <Toaster
+        position="bottom-right"
+        richColors
+        toastOptions={{
+          classNames: {
+            toast: "!bg-white !text-foreground !border-border !shadow-lg",
+            description: "!text-muted-foreground",
+            actionButton: "!bg-primary !text-primary-foreground !rounded-md !text-xs !font-medium",
+            cancelButton: "!bg-muted !text-muted-foreground",
+          },
+        }}
+      />
     </div>
   );
 }
-
-export default App;

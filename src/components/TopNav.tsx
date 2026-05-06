@@ -24,7 +24,10 @@ export function TopNav({ crumbs }: { crumbs: Crumb[] }) {
                 <span key={i} className="flex items-center gap-1">
                   {i > 0 && <span className="text-xs text-[#aaa] select-none">/</span>}
                   {isActive ? (
-                    <span className="text-xs font-medium leading-normal whitespace-nowrap" style={{ color: "#007666" }}>
+                    <span
+                      className="text-xs font-medium leading-normal whitespace-nowrap"
+                      style={{ color: "#007666" }}
+                    >
                       {crumb.label}
                     </span>
                   ) : (
@@ -45,6 +48,7 @@ export function TopNav({ crumbs }: { crumbs: Crumb[] }) {
       {/* Right: search bar */}
       <div className="flex items-start justify-end flex-shrink-0" style={{ width: 434 }}>
         <div className="flex items-start justify-end w-full">
+          {/* Current page dropdown */}
           <div
             className="flex gap-2 items-center px-2 self-stretch flex-shrink-0 transition-colors duration-150 hover:bg-[#f0f0f0] cursor-pointer"
             style={{
@@ -60,6 +64,7 @@ export function TopNav({ crumbs }: { crumbs: Crumb[] }) {
             </span>
             <ChevronDown size={16} className="flex-shrink-0 text-[#1a1a1a]" />
           </div>
+          {/* Search field */}
           <div
             className="flex flex-1 gap-0 items-center min-w-0 px-2 transition-shadow duration-150 hover:shadow-sm cursor-text"
             style={{
@@ -71,7 +76,9 @@ export function TopNav({ crumbs }: { crumbs: Crumb[] }) {
           >
             <div className="flex flex-1 gap-2 items-center min-w-0">
               <Search size={16} className="flex-shrink-0 text-[#737373]" />
-              <span className="flex-1 font-normal text-[14px] text-[#999] truncate">Search...</span>
+              <span className="flex-1 font-normal text-[14px] text-[#999] truncate">
+                Search...
+              </span>
             </div>
           </div>
         </div>

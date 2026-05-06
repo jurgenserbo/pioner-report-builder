@@ -1,7 +1,8 @@
 @import "tailwindcss";
-@import "@marlindtako/pioneer-design-system/styles";
 
-/* ─── Tailwind v4: map CSS variables → utility classes ────────────────────── */
+/* ─── Tailwind v4: map CSS variables → utility classes ─────────────────────
+   Without this block, classes like bg-muted, bg-secondary, text-primary, etc.
+   won't be generated. @theme inline keeps vars as references, not copies. */
 @theme inline {
   --color-background:          hsl(var(--background));
   --color-foreground:          hsl(var(--foreground));
@@ -27,7 +28,7 @@
   --radius-lg:  var(--radius);
   --radius-xl:  calc(var(--radius) + 4px);
 
-  /* Pioneer DS semantic surface colors */
+  /* ── Pioneer DS semantic surface colors (used by BadgeStatus) ─────────── */
   --color-background-neutral:  hsl(0 0% 93%);
   --color-background-blue:     #d9e9f2;
   --color-background-green:    hsl(142 55% 91%);
@@ -36,37 +37,41 @@
   --color-background-purple:   hsl(282 30% 92%);
   --color-transparent-custom:  transparent;
 
-  /* Pioneer DS tertiary color */
+  /* ── Pioneer DS tertiary color (accent blue — used by Checkbox/Switch checked state) */
   --color-tertiary:            #006CA9;
 }
 
 @layer base {
   :root {
-    --background:             0 0% 98%;
-    --foreground:             0 0% 4%;
-    --card:                   0 0% 100%;
+    /* ── DS-AP-PRO-Shadcn design tokens ─────────────────────────────────── */
+    /* Verified against Figma vars: --base/background, --base/foreground,
+       --base/muted, --base/muted-foreground, --base/border               */
+    --background:             0 0% 98%;      /* #fafafa — app bg           */
+    --foreground:             0 0% 4%;       /* #0a0a0a — base/foreground  */
+    --card:                   0 0% 100%;     /* white                      */
     --card-foreground:        0 0% 4%;
     --popover:                0 0% 100%;
     --popover-foreground:     0 0% 4%;
-    --primary:                171 100% 33%;
+    --primary:                171 100% 33%;  /* #00a991 — teal             */
     --primary-foreground:     0 0% 98%;
-    --secondary:              278 32% 32%;
-    --secondary-foreground:   0 0% 98%;
-    --muted:                  0 0% 96.1%;
-    --muted-foreground:       0 0% 45.1%;
-    --accent:                 0 0% 96.1%;
+    --secondary:              278 32% 32%;   /* #55376d — plum/purple      */
+    --secondary-foreground:   0 0% 98%;      /* #fafafa                    */
+    --muted:                  0 0% 96.1%;    /* #f5f5f5 — base/muted       */
+    --muted-foreground:       0 0% 45.1%;    /* #737373 — base/muted-fg    */
+    --accent:                 0 0% 96.1%;    /* #f5f5f5                    */
     --accent-foreground:      0 0% 4%;
     --destructive:            0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border:                 0 0% 89.8%;
-    --input:                  0 0% 89.8%;
-    --ring:                   171 100% 33%;
+    --border:                 0 0% 89.8%;    /* #e5e5e5 — base/border      */
+    --input:                  0 0% 89.8%;    /* #e5e5e5                    */
+    --ring:                   171 100% 33%;  /* matches primary            */
     --radius:                 0.5rem;
   }
 }
 
 /* ── Pioneer DS: force-generate classes Tailwind won't scan from node_modules */
 @layer utilities {
+  /* Badge/Status background colors */
   .bg-background-neutral { background-color: hsl(0 0% 93%); }
   .bg-background-blue    { background-color: #d9e9f2; }
   .bg-background-green   { background-color: hsl(142 55% 91%); }
@@ -74,31 +79,50 @@
   .bg-background-red     { background-color: hsl(350 80% 92%); }
   .bg-background-purple  { background-color: hsl(282 30% 92%); }
   .bg-transparent-custom { background-color: transparent; }
+  /* BadgeStatus layout — gap-[6px] and icon-span sizing aren't scanned from node_modules */
   .gap-\[6px\] { gap: 6px; }
   .shrink-0    { flex-shrink: 0; }
   .\[\&\>svg\]\:size-4 > svg { width: 1rem; height: 1rem; }
+  /* DS Checkbox checked state — data-attribute variants aren't generated from node_modules */
   .rounded-\[2px\] { border-radius: 2px; }
   .data-\[state\=checked\]\:bg-tertiary[data-state="checked"]     { background-color: var(--color-tertiary); }
   .data-\[state\=checked\]\:border-tertiary[data-state="checked"] { border-color: var(--color-tertiary); }
   .data-\[state\=checked\]\:text-white[data-state="checked"]      { color: white; }
   .focus-visible\:border-tertiary:focus-visible { border-color: var(--color-tertiary); }
   .focus-visible\:ring-tertiary:focus-visible   { --tw-ring-color: var(--color-tertiary); }
+  /* Select open state — ring matches input focus ring */
   .data-\[state\=open\]\:ring-2[data-state="open"]           { --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
   .data-\[state\=open\]\:ring-ring[data-state="open"]        { --tw-ring-color: hsl(var(--ring)); }
   .data-\[state\=open\]\:ring-offset-2[data-state="open"]    { --tw-ring-offset-width: 2px; --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color, white); }
+  /* DS Switch thumb translation — not scanned from node_modules */
   .data-\[state\=checked\]\:translate-x-4[data-state="checked"]   { transform: translateX(1rem); }
   .data-\[state\=unchecked\]\:translate-x-0[data-state="unchecked"] { transform: translateX(0px); }
+  /* DS Switch track — unchecked bg (checked bg-tertiary already above) */
   .data-\[state\=unchecked\]\:bg-accent[data-state="unchecked"]   { background-color: hsl(var(--accent)); }
+  /* DS Dialog overlay — bg-black/60 comes from node_modules so Tailwind won't scan it */
   .bg-black\/60 { background-color: rgb(0 0 0 / 0.6); }
   .bg-black\/80 { background-color: rgb(0 0 0 / 0.8); }
+  /* Horizontal scroll — scrollbar hidden until hover */
+  .hover-scrollbar                           { overflow-x: auto; }
+  .hover-scrollbar::-webkit-scrollbar        { height: 4px; background: transparent; }
+  .hover-scrollbar::-webkit-scrollbar-thumb  { background: transparent; border-radius: 2px; transition: background 0.15s; }
+  .hover-scrollbar:hover::-webkit-scrollbar-thumb { background: hsl(var(--border)); }
+  /* Caption typography — sizes verified from Pioneer DS repo */
+  .text-caption-sm     { font-size: 12px; line-height: 1.4; font-weight: 400; }
+  .text-caption-normal { font-size: 14px; line-height: 1.4; font-weight: 400; }
+  .text-caption-medium { font-size: 14px; line-height: 1.4; font-weight: 500; }
+  .text-caption-bold   { font-size: 14px; line-height: 1.4; font-weight: 600; }
 }
 
 @layer base {
-  * { border-color: hsl(var(--border)); }
+  * {
+    border-color: hsl(var(--border));
+  }
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     margin: 0;
+    /* DS: font/font-sans = Manrope, weights 400/500/600/700/800 loaded */
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;
     font-size: 14px;
   }
