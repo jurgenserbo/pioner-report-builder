@@ -1,6 +1,5 @@
 import { Search, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button, Input } from "@marlindtako/pioneer-design-system";
 
 // Fresh asset URLs from Figma (valid ~7 days from session)
 const imgIT       = "https://www.figma.com/api/mcp/asset/f46941f3-acc6-444f-bdf4-512f82ed3b86";

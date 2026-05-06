@@ -1,20 +1,19 @@
 import { useState } from "react";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogBody,
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@marlindtako/pioneer-design-system";
+} from "@marlindtako/pioneer-design-system";
 
 interface FolderItem {
   id: string;
@@ -68,8 +67,9 @@ export function FolderPickerModal({
       <DialogContent className="w-[440px] max-w-[440px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{subtitle}</DialogDescription>
         </DialogHeader>
+        <DialogBody>
+          <DialogDescription>{subtitle}</DialogDescription>
 
         <div className="py-2">
           <label className="block text-sm font-medium text-foreground mb-1.5">
@@ -88,6 +88,7 @@ export function FolderPickerModal({
             </SelectContent>
           </Select>
         </div>
+        </DialogBody>
 
         <DialogFooter>
           <Button variant="outline" onClick={handleClose}>Cancel</Button>

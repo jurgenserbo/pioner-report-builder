@@ -1,12 +1,13 @@
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogBody,
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@marlindtako/pioneer-design-system";
+} from "@marlindtako/pioneer-design-system";
 
 interface DeleteConfirmModalProps {
   open: boolean;
@@ -38,8 +39,10 @@ export function DeleteConfirmModal({
       <DialogContent className="w-[440px] max-w-[440px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+        <DialogBody>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogBody>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button variant="destructive" onClick={handleConfirm}>Delete</Button>

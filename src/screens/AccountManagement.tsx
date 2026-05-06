@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { FileText, Wrench, DollarSign, ArrowLeftRight, Plus, EllipsisVertical, GripVertical } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button, Card, CardContent, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@marlindtako/pioneer-design-system";
 import { ImportSpreadsheetModal } from "@/components/ImportSpreadsheetModal";
 import {
   DndContext,

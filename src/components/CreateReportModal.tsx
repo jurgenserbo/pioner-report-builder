@@ -13,14 +13,7 @@ import {
   Label,
   Separator,
 } from "@marlindtako/pioneer-design-system";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@marlindtako/pioneer-design-system";
 import { cn } from "@/lib/utils";
 
 // ── Types ─────────────────────────────────────────────────────────────────────

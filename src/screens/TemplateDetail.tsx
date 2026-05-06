@@ -1,9 +1,10 @@
 import { ArrowLeft, Check, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  Button, Card,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@marlindtako/pioneer-design-system";
 import type { TemplateCard } from "./TemplatesGallery";
 
 const accounts = [

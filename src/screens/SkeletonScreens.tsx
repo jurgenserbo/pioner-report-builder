@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@marlindtako/pioneer-design-system";
 
 export function AccountManagementSkeleton() {
   return (

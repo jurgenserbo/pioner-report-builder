@@ -45,7 +45,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@marlindtako/pioneer-design-system";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@marlindtako/pioneer-design-system";
 import { cn } from "@/lib/utils";
 import { CreateReportModal, type ReportConfig } from "@/components/CreateReportModal";
 import type { Crumb } from "@/components/TopNav";

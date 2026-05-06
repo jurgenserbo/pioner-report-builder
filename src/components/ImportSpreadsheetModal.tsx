@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { X, CheckCircle2, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button, Input, Dialog, DialogContent, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@marlindtako/pioneer-design-system";
 
 const imgPreview = "/modal-preview-1.png";
 const imgPreview2 = "/modal-preview-2.png";
